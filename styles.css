@@ -27,7 +27,7 @@ body {
   font-family: 'Cinzel', serif;
   color: var(--color-texto);
   position: relative;
-  background-image: url('img/fondo-oscuro.jpg');
+  background-image: url('img/Fondo-oscuro.jpg');
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;

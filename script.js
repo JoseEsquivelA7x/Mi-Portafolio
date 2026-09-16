@@ -9,10 +9,10 @@
   const RUTAS_ICONOS = [
     "img/icon/icon-code.png",
     "img/icon/icon-css3.png",
-    "img/icon/icon-github.png",
+    "img/icon/icon-GitHub.png",
     "img/icon/icon-html.png",
-    "img/icon/icon-java.png",
-    "img/icon/icon-javascript.png",
+    "img/icon/icon-Java.png",
+    "img/icon/icon-JavaScript.png",
     "img/icon/icon-nodejs.png",
     "img/icon/icon-sql.png",
     "img/icon/icon-vsc.png",
