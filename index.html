@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>.JE Portafolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="stylesheet.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<body>
+  <canvas id="bubblesIcons"></canvas>
+  <div id="background"></div>
+
+  <nav class="navbar">
+    <a href="#hero" class="nav-title">.JE</a>
+    <ul class="nav-links">
+      <li><a href="#projects">Proyectos</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#about">Sobre mí</a></li>
+      <li><a href="#contact">Contacto</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Menú móvil desplegable -->
+  <div class="nav-mobile" id="navMobile">
+    <a href="#hero">Inicio</a>
+    <a href="#projects">Proyectos</a>
+    <a href="#skills">Skills</a>
+    <a href="#about">Sobre mí</a>
+    <a href="#contact">Contacto</a>
+  </div>
+
+  <div id="paginasWrapper">
+  <section id="hero" class="pagina hero">
+    <div class="hero-container">
+      <!-- Bloque de la imagen (Derecha) -->
+      <div class="hero-image-wrapper">
+        <img alt="José esquivel" class="hero-avatar" src="/img/José Esquivel.png">
+
+        <!-- Insignia flotante: arriba a la izquierda -->
+        <div class="floating-badge badge-top-left">
+          Full-Stack Jr.
+        </div>
+
+        <!-- Insignia flotante: abajo a la derecha -->
+        <div class="floating-badge badge-bottom-right">
+          <span class="status-dot"></span> Disponible
+        </div>
+      </div>
+
+      <!-- Bloque de textos (Izquierda) -->
+      <div class="hero-text">
+        <h2 class="title">José Esquivel</h2>
+        <p class="kl-feat__desc kl-sub-title kl-feat__desc--line1 reveal-text" id="textoAnimado1">
+          Bienvenido a mi portafolio. Hola, soy José Esquivel. Mi pasión por la tecnología comenzó con el diagnóstico de hardware en equipos informáticos y consolas, y hoy se está desarrollando en el desarrollo web.
+        </p>
+        <p class="kl-feat__desc kl-sub-title kl-feat__desc--line1 reveal-text" id="textoAnimado2">
+          Como estudiante de Generación México, estoy creando mis primeros proyectos dentro del ecosistema Full-Stack. Mi mayor reto actual es desarrollar y presentar mi proyecto final, una aplicación web completa que refleje mi capacidad para resolver problemas del mundo real mediante la programación.
+        </p>
+        <p class="kl-feat__desc kl-sub-title kl-feat__desc--line1 reveal-text" id="textoAnimado3">
+          Cada línea de código que escribo parte de la misma curiosidad que me llevó a abrir mi primera PC: entender cómo funciona algo por dentro para después mejorarlo. Hoy esa curiosidad me impulsa a seguir aprendiendo Java, JavaScript y buenas prácticas de desarrollo Full-Stack.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="cv/José Esquivel.pdf" class="btn-hero btn-hero-primary" download>
+            <i class="fa-solid fa-file-arrow-down"></i> Descargar CV
+          </a>
+          <a href="#contact" class="btn-hero btn-hero-secondary">
+            <i class="fa-solid fa-user-plus"></i> Sígueme
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- Indicador de scroll animado / botón manual de siguiente sección -->
+    <button class="scroll-indicator scroll-nav-btn scroll-down" data-dir="1" type="button" aria-label="Ir a la siguiente sección">
+      <span class="scroll-text">Scroll</span>
+      <div class="scroll-arrow">↓</div>
+    </button>
+  </section>
+
+
+  <section id="projects" class="pagina">
+    <button class="scroll-nav-btn scroll-up" data-dir="-1" type="button" aria-label="Ir a la sección anterior">↑</button>
+    <h2>PROJECTS</h2>
+    <div class="projects-grid">
+      <div class="card">
+        <img src="img/Project/login.png" alt="Proyecto 1">
+        <h3>Zona Huella</h3>
+        <p>Descripción breve del proyecto 1.</p>
+        <a href="https://link-proyecto1.com" target="_blank">Ver proyecto</a>
+      </div>
+      <div class="card">
+        <img src="img/Project/tarjetas de ropa.png" alt="Proyecto 2">
+        <h3>Gears Sport</h3>
+        <p>Descripción breve del proyecto 2.</p>
+        <a href="https://link-proyecto2.com" target="_blank">Ver proyecto</a>
+      </div>
+      <div class="card">
+        <img src="img/Project/blog de musica.png" alt="Proyecto 3">
+        <h3>Blog de musica</h3>
+        <p>Descripción breve del proyecto 3.</p>
+        <a href="https://link-proyecto3.com" target="_blank">Ver proyecto</a>
+      </div>
+      <div class="card">
+        <img src="img/Project/convertidor de temperaturas.png" alt="Proyecto 4">
+        <h3>Convertidor de temperaturas</h3>
+        <p>Descripción breve del proyecto 4.</p>
+        <a href="https://link-proyecto4.com" target="_blank">Ver proyecto</a>
+      </div>
+      <div class="card">
+        <img src="" alt="Proximamente">
+        <h3>Proyecto 5</h3>
+        <p></p>
+        <a href="https://link-proyecto5.com" target="_blank">Ver proyecto</a>
+      </div>
+      <div class="card">
+        <img src="" alt="Proximamente">
+        <h3>Proximamente</h3>
+        <p></p>
+        <a href="https://link-proyecto6.com" target="_blank">Ver proyecto</a>
+      </div>
+    </div>
+    <button class="scroll-nav-btn scroll-down" data-dir="1" type="button" aria-label="Ir a la siguiente sección">↓</button>
+  </section>
+
+  <section id="skills" class="pagina">
+    <button class="scroll-nav-btn scroll-up" data-dir="-1" type="button" aria-label="Ir a la sección anterior">↑</button>
+    <h2>SKILLS</h2>
+    <div class="skills-columns">
+
+      <div class="skills-group">
+        <h3><i class="fa-solid fa-display"></i> Frontend</h3>
+        <div class="skills-tags">
+          <span class="skill-tag"><img src="img/icon/Icon-HTML.png" alt="HTML">HTML</span>
+          <span class="skill-tag"><img src="img/icon/icon-css3.png" alt="CSS">CSS</span>
+          <span class="skill-tag"><img src="img/icon/Icon-JavaScript.png" alt="JavaScript">JavaScript</span>
+        </div>
+      </div>
+
+      <div class="skills-group">
+        <h3><i class="fa-solid fa-server"></i> Backend</h3>
+        <div class="skills-tags">
+          <span class="skill-tag"><img src="img/icon/icon-Java.png" alt="Java">Java</span>
+          <span class="skill-tag"><img src="img/icon/icon-nodejs.png" alt="Node.js">Node.js</span>
+          <span class="skill-tag"><img src="img/icon/icon-sql.png" alt="SQL">SQL</span>
+        </div>
+      </div>
+
+      <div class="skills-group">
+        <h3><i class="fa-solid fa-toolbox"></i> Tools</h3>
+        <div class="skills-tags">
+          <span class="skill-tag"><img src="img/icon/Icon-GitHub.png" alt="GitHub">GitHub</span>
+          <span class="skill-tag"><img src="img/icon/icon-vsc.png" alt="VS Code">VS Code</span>
+          <span class="skill-tag"><img src="img/icon/icon-code.png" alt="APIs REST">APIs REST</span>
+        </div>
+      </div>
+
+    </div>
+    <button class="scroll-nav-btn scroll-down" data-dir="1" type="button" aria-label="Ir a la siguiente sección">↓</button>
+  </section>
+
+  <section id="about" class="pagina">
+    <button class="scroll-nav-btn scroll-up" data-dir="-1" type="button" aria-label="Ir a la sección anterior">↑</button>
+    <div class="about-container">
+      <!-- Columna izquierda -->
+      <div class="about-text">
+        <h2>Sobre mí</h2>
+        <h3>Transformando ideas en proyectos reales</h3>
+        <p>Soy José Francisco Esquivel Alvarado, Desarrollador Java Full Stack Jr. con formación en Generation México y experiencia en proyectos personales utilizando JavaScript, APIs REST, SQL, Git y GitHub.</p>
+        <p>Mi trayectoria combina el soporte técnico e infraestructura de redes con el desarrollo de software, destacando en resolución de problemas, trabajo en equipo y comunicación asertiva.</p>
+        <p>He liderado equipos en entornos de alta presión, optimizando procesos mediante herramientas digitales y gestionando proyectos creativos, lo que me ha permitido desarrollar una visión integral para aportar soluciones eficientes y de calidad.</p>
+        <p>Actualmente busco integrarme a un equipo de desarrollo donde pueda transformar ideas en código y generar un impacto positivo en los proyectos.</p>
+      </div>
+
+      <!-- Columna derecha -->
+      <div class="about-skills">
+        <div class="skill-box">
+          <i class="fas fa-comments"></i>
+          <div>
+            <h4>Comunicación</h4>
+            <p>Transmito ideas con claridad y precisión.</p>
+          </div>
+        </div>
+        <div class="skill-box">
+          <i class="fas fa-users"></i>
+          <div>
+            <h4>Trabajo en equipo</h4>
+            <p>Colaboro de manera efectiva en proyectos grupales.</p>
+          </div>
+        </div>
+        <div class="skill-box">
+          <i class="fas fa-lightbulb"></i>
+          <div>
+            <h4>Resolución de problemas</h4>
+            <p>Encuentro soluciones creativas y prácticas.</p>
+          </div>
+        </div>
+        <div class="skill-box">
+          <i class="fas fa-rocket"></i>
+          <div>
+            <h4>Innovación</h4>
+            <p>Exploro nuevas tecnologías y metodologías.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="scroll-nav-btn scroll-down" data-dir="1" type="button" aria-label="Ir a la siguiente sección">↓</button>
+  </section>
+
+  <section id="contact" class="pagina">
+    <button class="scroll-nav-btn scroll-up" data-dir="-1" type="button" aria-label="Ir a la sección anterior">↑</button>
+    <div class="contact-main">
+    <div class="contacto-layout">
+
+      <!-- COLUMNA IZQUIERDA: Formulario -->
+      <div class="contacto-columna columna-form">
+        <h2>CONTACTO</h2>
+        <form id="contactForm">
+          <div class="form-group">
+            <input type="text" name="subject" placeholder="Asunto" required>
+          </div>
+          <div class="form-group">
+            <input type="email" name="email" placeholder="Tu correo" required>
+          </div>
+          <div class="form-group">
+            <textarea name="message" placeholder="Tu mensaje" rows="5" required></textarea>
+          </div>
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
+
+      <!-- COLUMNA DERECHA: Información de contacto y redes -->
+      <div class="contacto-columna columna-info">
+        <h2>¿Quieres crear un proyecto personal?</h2>
+        <p class="descripcion-profesional">
+          Actualmente me encuentro con disponibilidad abierta para colaborar en proyectos personales o para incorporarme a un equipo de trabajo Full-Time como desarrollador <strong>Full Stack Jr.</strong> ¡Hagamos realidad tus ideas!
+        </p>
+
+        <div class="info-directa">
+          <div class="info-item">
+            <i class="fa-solid fa-envelope"></i>
+            <span>jose.esquivel.a7x@gmail.com</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-phone"></i>
+            <span>+52-861-124-2512</span>
+          </div>
+          <div class="info-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>García, N.L.</span>
+          </div>
+        </div>
+
+        <!-- Enlaces/Botones a tus redes -->
+        <div class="social-botones">
+          <a href="https://github.com/JoseEsquivelA7x" target="_blank" class="btn-social github" aria-label="GitHub">
+            <i class="fa-brands fa-github"></i><span>GitHub</span>
+          </a>
+          <a href="https://linkedin.com/in/jose-esquivela/" target="_blank" class="btn-social linkedin" aria-label="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i><span>LinkedIn</span>
+          </a>
+          <a href="mailto:jose.esquivel.a7x@gmail.com" class="btn-social email" aria-label="Correo">
+            <i class="fa-solid fa-envelope"></i><span>Correo</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="footer-bottom">
+        <p>&copy; <span id="footerYear"></span> José Esquivel. Todos los derechos reservados</p>
+      </div>
+    </footer>
+  </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

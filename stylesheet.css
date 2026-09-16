@@ -1,0 +1,23 @@
+/* ============================================================
+   Tipografía de títulos — Haext Plain, color amarillo dorado
+   ============================================================ */
+@font-face {
+  font-family: 'Haext Plain';
+  src: url('fonts/HaextPlain.eot');
+  src: local('Haext Plain'), local('HaextPlain'),
+    url('fonts/HaextPlain.eot?#iefix') format('embedded-opentype'),
+    url('fonts/HaextPlain.woff2') format('woff2'),
+    url('fonts/HaextPlain.woff') format('woff'),
+    url('fonts/HaextPlain.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+h1, h2, h3, h4,
+.navbar a,
+.nav-mobile a,
+.nav-title {
+  font-family: 'Haext Plain', sans-serif;
+  color: var(--color-acento-suave);
+}

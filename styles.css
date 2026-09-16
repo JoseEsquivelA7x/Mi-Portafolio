@@ -1,0 +1,1230 @@
+/* ============================================================
+   0) Reset y variables globales
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-fondo: #0f172a;
+  --color-texto: #ffffff;
+  --color-acento: #c59e00;
+  --color-acento-suave: #facc15;
+  --color-vidrio: rgba(255, 255, 255, 0.08);
+  --color-borde: rgba(255, 255, 255, 0.2);
+  --nav-height: 74px;
+  --max-ancho: 1200px;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden; /* el documento no tiene ningún scroll propio */
+}
+
+body {
+  font-family: 'Cinzel', serif;
+  color: var(--color-texto);
+  position: relative;
+  background-image: url('/img/Fondo-oscuro.jpg');
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: var(--color-fondo);
+}
+
+/* El "marco" fijo del alto de la ventana. Dentro de él,
+   #paginasWrapper apila las 5 secciones una debajo de otra y se
+   mueve con transform (nunca con scroll nativo); así el
+   documento en sí jamás se puede arrastrar. */
+#paginasWrapper {
+  width: 100%;
+  will-change: transform;
+}
+
+/* Canvas de iconos flotantes */
+#bubblesIcons {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none; /* no bloquea clics ni scroll */
+}
+
+/* Asegura que el contenido quede por encima del canvas */
+.hero-text,
+.hero-image-wrapper,
+nav,
+.scroll-indicator {
+  position: relative;
+  z-index: 1;
+}
+
+#hero {
+  position: relative;
+}
+
+/* ============================================================
+   1) Navbar + menú móvil (hamburguesa)
+   ============================================================ */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px 24px;
+  height: var(--nav-height);
+}
+
+.nav-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: auto;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-links a {
+  text-decoration: none;
+  font-weight: bold;
+  color: var(--color-acento);
+  transition: color 0.25s ease;
+}
+
+.nav-links a:hover {
+  color: var(--color-acento-suave);
+}
+
+/* Botón hamburguesa: oculto en escritorio */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 26px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 110;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--color-acento-suave);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.nav-toggle.activo span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.nav-toggle.activo span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle.activo span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Menú móvil desplegable: lista vertical en orden de arriba a abajo */
+.nav-mobile {
+  position: fixed;
+  top: var(--nav-height);
+  left: 0;
+  width: 100%;
+  background: rgba(15, 23, 42, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+  z-index: 99;
+}
+
+.nav-mobile.activo {
+  max-height: 400px;
+}
+
+.nav-mobile a {
+  text-decoration: none;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 1.05rem;
+}
+
+/* ============================================================
+   2) Estructura general de secciones
+   ============================================================ */
+.pagina {
+  position: relative;
+  min-height: 100svh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: calc(var(--nav-height) + 30px);
+  padding-bottom: 30px;
+  overflow-x: hidden;
+  /* Respaldo: si en un dispositivo muy bajo el contenido no
+     alcanza a caber en una sola pantalla, esta sección (y solo
+     ella, nunca el documento) se vuelve deslizable en vez de
+     recortar contenido. Como el documento (html/body) ya no
+     tiene overflow propio, esto no compite con nada. */
+  overflow-y: auto;
+}
+
+section h2 {
+  margin-top: 0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  letter-spacing: 1px;
+}
+
+/* Contact es la última "página": reparte el espacio entre el
+   formulario y el footer para que ambos se vean sin scroll extra */
+#contact.pagina {
+  justify-content: flex-start;
+  padding-bottom: 0;
+}
+
+.contact-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* ============================================================
+   3) Hero
+   ============================================================ */
+.hero-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(10px, 3vh, 40px);
+  max-width: var(--max-ancho);
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.hero-text {
+  flex: 1.15;
+  max-width: 62%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.hero .title {
+  font-size: clamp(1.3rem, 3.6vh, 3rem);
+  margin-bottom: clamp(0.3rem, 1vh, 1rem);
+}
+
+.kl-feat__desc-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: apareceLetra 0.4s ease forwards;
+}
+
+.kl-feat__desc-char.is-space {
+  width: 0.3em;
+}
+
+@keyframes apareceLetra {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-text {
+  font-size: clamp(0.68rem, 1.9vh, 1rem);
+  line-height: 1.4;
+  max-width: 640px;
+  margin: 0 0 clamp(6px, 1.4vh, 14px) 0;
+  text-align: left;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: clamp(6px, 1.6vh, 20px);
+  flex-wrap: wrap;
+}
+
+.btn-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 700;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.75rem, 1.8vh, 0.95rem);
+  padding: clamp(8px, 1.6vh, 12px) clamp(14px, 3vh, 22px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-hero-primary {
+  background: var(--color-acento);
+  color: #0f172a;
+}
+
+.btn-hero-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-acento-suave);
+  border: 1px solid var(--color-borde);
+}
+
+.btn-hero:hover {
+  transform: translateY(-3px) scale(1.06);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+}
+
+.hero-image-wrapper {
+  flex: 0.85;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.hero-avatar {
+  width: 100%;
+  max-width: clamp(90px, 24vh, 250px);
+  height: auto;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.floating-badge {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: clamp(5px, 1vh, 10px) clamp(8px, 2vh, 16px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: clamp(0.6rem, 1.5vh, 0.85rem);
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  white-space: nowrap;
+  animation: apareceFlotante 0.6s ease forwards, flotar 3s ease-in-out infinite;
+}
+
+.badge-top-left {
+  top: clamp(-16px, -2vh, -6px);
+  left: clamp(-16px, -1vh, -6px);
+  animation-delay: 0.5s, 1.1s;
+}
+
+.badge-bottom-right {
+  bottom: clamp(-16px, -2vh, -6px);
+  right: clamp(-16px, -1vh, -6px);
+  animation-delay: 0.7s, 1.3s;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  flex-shrink: 0;
+}
+
+@keyframes apareceFlotante {
+  from { opacity: 0; transform: translateY(15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+.scroll-indicator {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 1.05rem;
+  animation: bounce 1.5s infinite;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 6px 14px;
+  border-radius: 10px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.scroll-indicator:hover,
+.scroll-indicator:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
+/* Botones circulares de scroll manual (arriba/abajo) para el
+   resto de las secciones. Van con position:absolute para no
+   restar espacio al contenido de la sección. */
+.scroll-nav-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: clamp(30px, 6vh, 42px);
+  height: clamp(30px, 6vh, 42px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--color-borde);
+  color: var(--color-acento-suave);
+  font-size: clamp(0.9rem, 2vh, 1.2rem);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.scroll-nav-btn:hover,
+.scroll-nav-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.scroll-nav-btn.scroll-down {
+  bottom: clamp(8px, 2vh, 18px);
+  animation: bounce 1.5s infinite;
+}
+
+.scroll-nav-btn.scroll-up {
+  top: calc(var(--nav-height) + clamp(6px, 1.6vh, 14px));
+}
+
+/* ============================================================
+   4) Projects
+   ============================================================ */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(8px, 2vh, 20px);
+  max-width: var(--max-ancho);
+  width: 100%;
+  margin: clamp(10px, 2.4vh, 24px) auto 0;
+  padding: 0 20px;
+}
+
+.card {
+  position: relative;
+  background: var(--color-vidrio);
+  border: 1px solid var(--color-borde);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: clamp(8px, 1.8vh, 18px);
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.card img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-bottom: clamp(4px, 1vh, 10px);
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.card h3 {
+  margin-bottom: clamp(3px, 0.8vh, 8px);
+  font-size: clamp(0.75rem, 1.8vh, 1.05rem);
+}
+
+.card p {
+  font-size: clamp(0.62rem, 1.4vh, 0.85rem);
+  flex-grow: 1;
+}
+
+.card a {
+  display: inline-block;
+  margin-top: 10px;
+  padding: clamp(5px, 1.2vh, 8px) 14px;
+  border-radius: 8px;
+  background: var(--color-acento);
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: clamp(0.62rem, 1.4vh, 0.85rem);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card a:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+/* ============================================================
+   5) Skills
+   ============================================================ */
+.skills-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(10px, 2.4vh, 24px);
+  max-width: var(--max-ancho);
+  width: 100%;
+  margin: clamp(10px, 2.4vh, 24px) auto 0;
+  padding: 0 20px;
+}
+
+.skills-group {
+  position: relative;
+  background: var(--color-vidrio);
+  border: 1px solid var(--color-borde);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: clamp(10px, 2.2vh, 22px) clamp(10px, 1.8vh, 18px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skills-group:hover {
+  transform: scale(1.035);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+}
+
+.skills-group h3 {
+  font-size: clamp(0.8rem, 1.8vh, 1.05rem);
+  margin-bottom: clamp(6px, 1.6vh, 16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.skills-group h3 i {
+  color: var(--color-acento);
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(6px, 1vh, 10px);
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: clamp(5px, 1vh, 8px) 12px;
+  font-size: clamp(0.66rem, 1.4vh, 0.82rem);
+  color: #fff;
+  transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.skill-tag:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.skill-tag img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+/* ============================================================
+   6) About
+   ============================================================ */
+#about.pagina {
+  justify-content: flex-start;
+}
+
+.about-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: clamp(14px, 3vh, 40px);
+  max-width: var(--max-ancho);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 20px;
+  text-align: left;
+  min-height: 0;
+}
+
+.about-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.about-text h2 {
+  font-size: clamp(1.1rem, 3.2vh, 2rem);
+  margin-bottom: clamp(4px, 1vh, 10px);
+}
+
+.about-text h3 {
+  font-size: clamp(0.85rem, 2.4vh, 1.4rem);
+  margin-bottom: clamp(6px, 1.4vh, 16px);
+}
+
+.about-text p {
+  font-size: clamp(0.68rem, 1.6vh, 1.02rem);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.about-skills {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.skill-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: clamp(8px, 1.8vh, 14px);
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-box i {
+  font-size: clamp(1.1rem, 2.4vh, 1.6rem);
+  color: var(--color-acento-suave);
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.skill-box h4 {
+  font-size: clamp(0.75rem, 1.7vh, 0.95rem);
+  margin-bottom: 2px;
+}
+
+.skill-box p {
+  font-size: clamp(0.64rem, 1.4vh, 0.8rem);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.skill-box:hover {
+  transform: translateY(-5px) scale(1.04);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.3);
+  z-index: 2;
+}
+
+/* ============================================================
+   7) Contacto
+   ============================================================ */
+.contacto-layout {
+  display: flex;
+  gap: clamp(12px, 2.5vh, 32px);
+  max-width: 1000px;
+  width: 92%;
+  margin: 0 auto;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.contacto-columna {
+  flex: 1;
+  background: rgba(30, 30, 30, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: clamp(10px, 2.2vh, 22px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.contacto-columna h2 {
+  font-size: clamp(0.85rem, 2.2vh, 1.2rem);
+  margin-bottom: clamp(6px, 1.4vh, 14px);
+  letter-spacing: 1px;
+  text-align: left;
+}
+
+/* La columna de info (texto + redes) va suelta, sin fondo ni
+   borde de tarjeta, para que no todo el diseño se vea "cuadrado"
+   — a diferencia de .columna-form, que sí conserva la tarjeta. */
+.columna-info {
+  background: none;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 4px;
+}
+
+#contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.4vh, 14px);
+  height: 100%;
+}
+
+form .form-group {
+  margin-bottom: 0;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  padding: clamp(6px, 1.2vh, 10px);
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(0.8rem, 1.8vh, 1rem);
+}
+
+form button {
+  padding: clamp(6px, 1.2vh, 10px) 20px;
+  border-radius: 8px;
+  border: none;
+  background: #22c55e;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+form button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(34, 197, 94, 0.4);
+}
+
+.descripcion-profesional {
+  color: #cccccc;
+  font-size: clamp(0.72rem, 1.7vh, 0.9rem);
+  line-height: 1.45;
+  margin-bottom: clamp(8px, 1.8vh, 18px);
+}
+
+.descripcion-profesional strong {
+  color: #2ecc71;
+}
+
+.info-directa {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1vh, 10px);
+  margin-bottom: auto;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(0.72rem, 1.6vh, 0.88rem);
+  color: #f1f1f1;
+}
+
+.info-item i {
+  color: var(--color-acento-suave);
+  width: 18px;
+  text-align: center;
+}
+
+.social-botones {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 14px;
+  margin-top: clamp(8px, 1.8vh, 18px);
+}
+
+.btn-social {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  text-decoration: none;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-social span {
+  display: none;
+}
+
+.btn-social i {
+  font-size: 1.05rem;
+}
+
+.btn-social:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-social.github:hover { border-color: #6e5494; }
+.btn-social.linkedin:hover { border-color: #0077b5; }
+.btn-social.email:hover { border-color: #2ecc71; }
+
+/* ============================================================
+   8) Footer
+   ============================================================ */
+.site-footer {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 100%;
+  background: rgba(10, 12, 20, 0.85);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: clamp(10px, 2vh, 22px) 24px clamp(8px, 1.4vh, 14px);
+}
+
+.footer-bottom {
+  max-width: var(--max-ancho);
+  margin: clamp(6px, 1.4vh, 14px) auto 0;
+  padding-top: clamp(4px, 1vh, 10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+}
+
+.footer-bottom p {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ============================================================
+   9) Media queries — responsividad completa
+   ============================================================ */
+
+/* Tablets / iPad (<=1024px) */
+@media (max-width: 1024px) {
+  :root {
+    --nav-height: 66px;
+  }
+
+  .pagina {
+    padding-top: calc(var(--nav-height) + 22px);
+  }
+
+  section h2 {
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .card h3 {
+    font-size: 0.92rem;
+  }
+
+  .card p {
+    font-size: 0.76rem;
+  }
+
+  .card a {
+    padding: 6px 12px;
+    font-size: 0.76rem;
+  }
+
+  .skills-columns {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .hero-text {
+    max-width: 56%;
+  }
+}
+
+/* Móviles / iPhone (<=768px) */
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 62px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .pagina {
+    padding-top: calc(var(--nav-height) + 18px);
+    padding-bottom: 18px;
+  }
+
+  /* El botón de "Scroll" del Hero va con position:absolute pegado
+     al fondo de la sección, así que se reserva un poco más de
+     aire ahí para que el contenido no termine debajo de él */
+  #hero.pagina {
+    padding-bottom: 52px;
+  }
+
+  .hero-container {
+    display: block;
+    text-align: left;
+    padding: 10px;
+  }
+
+  .hero-image-wrapper {
+    float: left;
+    width: 34%;
+    max-width: 150px;
+    margin: 0 14px 10px 0;
+  }
+
+  .hero-text {
+    display: block;
+    max-width: 100%;
+  }
+
+  .reveal-text {
+    text-align: left;
+    max-width: 100%;
+  }
+
+  .hero-buttons {
+    clear: both;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .hero-buttons .btn-hero {
+    justify-content: center;
+  }
+
+  .hero-avatar {
+    max-width: 100%;
+  }
+
+  /* Con la foto flotando, las insignias se pegan a sus esquinas
+     (en vez de salirse mucho) para no encimarse con el texto */
+  .badge-top-left,
+  .badge-bottom-right {
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+  }
+
+  .badge-top-left {
+    top: 4px;
+    left: 4px;
+  }
+
+  .badge-bottom-right {
+    bottom: 4px;
+    right: 4px;
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(6px, 1.6vh, 10px);
+    padding: 0 12px;
+    margin-top: clamp(8px, 1.8vh, 14px);
+  }
+
+  .card {
+    padding: clamp(6px, 1.4vh, 10px);
+  }
+
+  .card h3 {
+    font-size: clamp(0.68rem, 1.6vh, 0.85rem);
+  }
+
+  .card p {
+    font-size: clamp(0.58rem, 1.3vh, 0.72rem);
+  }
+
+  .card a {
+    padding: clamp(4px, 1vh, 6px) 10px;
+    font-size: clamp(0.58rem, 1.3vh, 0.72rem);
+  }
+
+  section h2 {
+    font-size: clamp(1.05rem, 3.4vh, 1.5rem);
+  }
+
+  .skills-columns {
+    grid-template-columns: 1fr;
+    gap: clamp(6px, 1.6vh, 12px);
+  }
+
+  .about-container {
+    grid-template-columns: 1fr;
+    gap: clamp(10px, 2.4vh, 20px);
+    text-align: center;
+  }
+
+  .about-text {
+    text-align: center;
+  }
+
+  .skill-box {
+    text-align: left;
+  }
+
+  .contacto-layout {
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding: 0 12px;
+  }
+
+  .contacto-columna {
+    padding: 16px;
+  }
+
+  /* El título de Contacto empieza pegado arriba (esta sección no
+     se centra verticalmente como las demás), así que necesita
+     más aire para no toparse con la flecha de "subir" */
+  #contact .columna-form h2 {
+    margin-top: clamp(16px, 4vh, 28px);
+  }
+
+  .columna-info h2 {
+    font-size: clamp(0.95rem, 3.6vh, 1.2rem);
+  }
+
+  /* Footer de Contacto en móvil: solo la línea de derechos
+     (el resto ya se borró del HTML, no solo se ocultaba) */
+  .site-footer {
+    padding: 10px 20px 8px;
+    margin-top: 6px;
+  }
+
+  .footer-bottom {
+    margin: 0 auto;
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+/* Ancho medio (620px-1024px): con solo 2 columnas, cada tarjeta
+   se vuelve más ancha (y por lo tanto su imagen más alta, ya que
+   respeta un aspect-ratio) mientras más crece la pantalla — así
+   que en vez de caber mejor, las 6 tarjetas se desbordaban cada
+   vez más y chocaban con el nav/flecha. Usar las mismas 3
+   columnas de escritorio (más chicas) resuelve esto de raíz. */
+@media (min-width: 620px) and (max-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .card {
+    padding: 8px;
+  }
+
+  .card h3 {
+    font-size: 0.72rem;
+  }
+
+  .card p {
+    font-size: 0.62rem;
+  }
+
+  .card a {
+    padding: 4px 8px;
+    font-size: 0.62rem;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 420px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-hero {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Alturas extremadamente pequeñas (pantallas de feature phone
+   tipo JioPhone, o un celular normal en horizontal). Aquí ya no
+   alcanza con achicar tipografía: se prioriza que lo esencial se
+   vea legible y se oculta lo secundario, dejando el respaldo de
+   scroll interno (arriba) como última red de seguridad. */
+@media (max-height: 420px) {
+  .hero-avatar {
+    max-width: 80px;
+  }
+
+  .floating-badge {
+    display: none;
+  }
+
+  #textoAnimado2,
+  #textoAnimado3 {
+    display: none;
+  }
+
+  .hero .title {
+    font-size: 1.1rem;
+  }
+
+  .scroll-nav-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Monitores HD grandes / 2K / 4K */
+@media (min-width: 1600px) {
+  :root {
+    --max-ancho: 1440px;
+  }
+
+  body {
+    font-size: 1.05rem;
+  }
+
+  .hero-avatar {
+    max-width: 300px;
+  }
+}
+
+@media (min-width: 2200px) {
+  :root {
+    --max-ancho: 1700px;
+  }
+
+  body {
+    font-size: 1.2rem;
+  }
+
+  .hero-avatar {
+    max-width: 360px;
+  }
+
+  .card img {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ============================================================
+   10) Revelado progresivo de entrada por sección (desktop y
+   táctil por igual): cada sección, al recibirse vía irASeccion(),
+   arranca desde este estado oculto y el JS la anima con GSAP.
+   Ya NO depende de si el dispositivo es táctil o no: ahora todas
+   las secciones son "una pantalla = una sección", sin scroll
+   libre, así que este estado inicial aplica siempre.
+   ============================================================ */
+.pagina:not(#hero) .card,
+.pagina:not(#hero) h2,
+.pagina:not(#hero) h3,
+.pagina:not(#hero) p,
+.pagina:not(#hero) form,
+.pagina:not(#hero) .skill-box,
+.pagina:not(#hero) .skills-group,
+.pagina:not(#hero) .info-item,
+.pagina:not(#hero) .footer-bottom {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .pagina:not(#hero) .card,
+  .pagina:not(#hero) h2,
+  .pagina:not(#hero) h3,
+  .pagina:not(#hero) p,
+  .pagina:not(#hero) form,
+  .pagina:not(#hero) .skill-box,
+  .pagina:not(#hero) .skills-group,
+  .pagina:not(#hero) .info-item,
+  .pagina:not(#hero) .footer-bottom {
+    opacity: 1;
+    transform: none;
+  }
+}
